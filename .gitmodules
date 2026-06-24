@@ -1,0 +1,3 @@
+[submodule "themes/r3ply"]
+	path = themes/r3ply
+	url = https://github.com/r3ply/r3ply-zola-theme.git

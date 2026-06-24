@@ -1,0 +1,29 @@
+{
+  "name": "r3ply-zola-theme-demo",
+  "version": "0.0.01",
+  "description": "Zola demo project that demonstrates using the r3ply-zola-theme.",
+  "main": "index.js",
+  "scripts": {
+    "build": "zola build $BUILD_OPTS && npx @tailwindcss/cli -i ./input.css -o ./public/style.css -m",
+    "serve": "zola serve $SERVE_OPTS & npx @tailwindcss/cli  -i ./input.css -o ./public/style.css --watch && wait",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "r3ply",
+    "commenting",
+    "zola",
+    "comments",
+    "email",
+    "theme",
+    "static sites"
+  ],
+  "author": "Spencer Van Wessem Scorcelletti",
+  "license": "MIT",
+  "packageManager": "pnpm@10.6.2",
+  "devDependencies": {
+    "@r3ply/cli": "^0.0.1",
+    "@tailwindcss/cli": "^4.3.1",
+    "@tailwindcss/typography": "^0.5.20",
+    "tailwindcss": "^4.3.1"
+  }
+}
