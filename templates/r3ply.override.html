@@ -1,0 +1,60 @@
+{% import "r3ply.html" as base %}
+
+{# Override url decode #}
+{%- macro urldecode(encoded) -%}
+  {{ base::urldecode(encoded=encoded) }}
+{%- endmacro -%}
+
+{# Override mailto #}
+{%- macro mailto(to, subject, body) -%}
+  {{ base::mailto(to=to, subject=subject, body=body) }}
+{%- endmacro -%}
+
+{# Override get ancestors #}
+{%- macro get_ancestors(child, stop_at_id=false) -%}
+  {{ base::get_ancestors(child=child, stop_at_id=stop_at_id) }}
+{%- endmacro -%}
+
+{# Override get descendants #}
+{%- macro get_descendants(parent) -%}
+  {{ base::get_descendants(parent=parent) }}
+{%- endmacro -%}
+
+{# Override render comments #}
+{%- macro render_comments_sorted_by_activity(comments, starting_from_id=false) -%}
+  {{ base::render_comments_sorted_by_activity(comments=comments, starting_from_id=starting_from_id) }}
+{%- endmacro -%}
+
+{# Override write thread #}
+{% macro write_thread(parent, comments) %}
+{% set children = comments | filter(attribute="taxonomies.replies.1", value=parent.slug) | sort(attribute="extra.latest_activity") | reverse %}
+<details open class="w-xl">
+  <summary class="border-b">
+    <span class="inline-flex gap-2">
+      <span class="text-red-400"><span class="text-gray-600">#</span>{{ parent.slug }}</span>
+      <span>|</span>
+      <time datetime="{{ parent.date }}" class="text-blue-400">
+        <span class="text-yellow-500">{{ parent.date | date(format="%Y-%m-%d") }}</span>
+        <span>{{ parent.date | date(format="%H:%M") }}</span>
+      </time>
+    </span>
+  </summary>
+  <article class="my-2">
+  {{ parent.content | safe }}
+  </article>
+  {% set subject = "/" ~ parent.taxonomies.subjects[0] ~ "/#" ~ parent.slug %}
+  <div class="m-2">
+    <a class="px-2 py-1 rounded-xl border text-purple-400"
+    href="{{ r3ply::mailto(to=config.extra.domain | default(value='CHANGE_ME'),
+    subject=subject,
+    body='') }}">reply</a>
+  </div>
+  <div class="ml-4 pt-2">
+    {% for child in children %}
+      {# Note: see comment in theme template for why this is `comments::` instead of `self::` #}
+      {{ self::write_thread(parent=child, comments=comments) }}
+    {% endfor %}
+  </div>
+</details>
+{% endmacro  %}
+
