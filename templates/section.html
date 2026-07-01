@@ -1,0 +1,25 @@
+{% extends "r3ply/templates/section.html" %}
+{% import "r3ply.override.html" as r3ply %}
+
+{% block body %}
+  <div class="max-w-4xl mx-auto prose">
+  {{ super() }}
+  </div>
+{% endblock body %}
+
+{% block page_list %}
+<h2>Pages</h2>
+{{ super() }}
+{% endblock page_list %}
+
+{% block section_list %}
+<h2>Sections</h2>
+{{ super() }}
+{% endblock section_list %}
+
+{% block comments %}
+<section id="comments">
+  <h2>Comments</h2>
+  {{ r3ply::render_comments_sorted_by_activity(comments=comments) }}
+</section>
+{% endblock comments %}

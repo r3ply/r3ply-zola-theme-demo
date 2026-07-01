@@ -1,0 +1,62 @@
+{% import "r3ply.html" as r3ply %}
+{% extends "r3ply/templates/aliases.html" %}
+
+{% block setup %}
+{% set aliases = load_data(literal=r3ply::aliases(), format="json") | sort(attribute="ts") | reverse %}
+{% endblock setup %}
+
+{% block body %}
+<main>
+  <article class="prose">
+    {{ page.content | safe }}
+  </article>
+</main>
+<section id="comments">
+  <div class="flex justify-center py-6">
+    <a
+      class="rounded-xl border-2 border-watermelon px-2 py-3"
+      href="{{
+        r3ply::mailto(to=config.extra.r3ply.to_email | default(value='CHANGE_ME'), subject='/aliases/',
+        body='')
+      }}">
+      Add Comment
+    </a>
+  </div>
+  <div class="prose prose-light  min-w-full overflow-auto prose-table:table">
+    <table class="mt-12 max-w-full">
+      <thead>
+        <tr>
+          <th>Commenter ID</th>
+          <th>Alias</th>
+          <th class="text-center">Date</th>
+          <th class="text-center">
+            RSS
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="inline align-text-bottom text-salmon-300"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm1.5 2.5c5.523 0 10 4.477 10 10a1 1 0 1 1-2 0 8 8 0 0 0-8-8 1 1 0 0 1 0-2m0 4a6 6 0 0 1 6 6 1 1 0 1 1-2 0 4 4 0 0 0-4-4 1 1 0 0 1 0-2m.5 7a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"
+              />
+            </svg>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in aliases %}
+          <tr>
+            <td><span>@</span><a class="text-red-300" href="/commenters/{{ a.user }}">{{ a.user }}</a></td>
+            <td>✨<a class="text-teal-200" href="/commenters/{{ a.user }}">{{ a.alias }}</a></td>
+            <td class="text-center font-mono"><span class="text-blue-300">{{ a.ts | date(format="%Y-%m-%d %H:%M:%S UTC") }}</span></td>
+            <td class="text-center"><a class="text-pink-300" href="/commenters/{{ a.user }}/atom.xml">Subscribe</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock body %}
